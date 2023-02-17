@@ -152,7 +152,7 @@ SensorReader::Update()
 	char* buf = buffer;
 	ssize_t len;
 
-	fSensorDevice->SetTo("/dev/misc/it87", B_READ_ONLY);
+	fSensorDevice->SetTo("/dev/sensor/it87", B_READ_ONLY);
 	if (fSensorDevice->InitCheck() == B_OK) {
 		len = fSensorDevice->Read(buf, 256);
 //		buf = strchr(buf, '\n') + 1; // Skip first line
