@@ -8,7 +8,7 @@
 #include <Roster.h>
 #include "HardmonyApp.h"
 
-const char* HARDMONY_APP_SIGNATURE = "application/x-vnd.OscarL.Hardmony";
+const char* HARDMONY_APP_SIGNATURE = "application/x-vnd.OscarL-Hardmony";
 
 HardmonyApp::HardmonyApp()
 	: BApplication(HARDMONY_APP_SIGNATURE)

@@ -38,11 +38,11 @@ SRCS =  DeskbarView.cpp \
 
 #	Specify the resource definition files to use. Full or relative paths can be
 #	used.
-RDEFS =
+RDEFS = Hardmony.rdef
 
 #	Specify the resource files to use. Full or relative paths can be used.
 #	Both RDEFS and RSRCS can be utilized in the same Makefile.
-RSRCS =  Hardmony.rsrc
+# RSRCS =  Hardmony.rsrc
 
 # End Pe/Eddie support.
 # @<-src@

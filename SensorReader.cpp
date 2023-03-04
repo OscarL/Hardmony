@@ -148,32 +148,44 @@ SensorReader::InitCheck()
 bool
 SensorReader::Update()
 {
-	char buffer[256];
+	char buffer[512];
 	char* buf = buffer;
-	ssize_t len;
+	ssize_t bytesRead;
 
 	fSensorDevice->SetTo("/dev/sensor/it87", B_READ_ONLY);
-	if (fSensorDevice->InitCheck() == B_OK) {
-		len = fSensorDevice->Read(buf, 256);
-//		buf = strchr(buf, '\n') + 1; // Skip first line
-		buf = strchr(buf, ':') + 1; sscanf(buf, "%fV", &Voltages[0]);
-		buf = strchr(buf, ':') + 1; sscanf(buf, "%fV", &Voltages[1]);
-		buf = strchr(buf, ':') + 1; sscanf(buf, "%fV", &Voltages[2]);
-		buf = strchr(buf, ':') + 1; sscanf(buf, "%fV", &Voltages[3]);
-		buf = strchr(buf, ':') + 1; sscanf(buf, "%fV", &Voltages[4]);
-		buf = strchr(buf, ':') + 1; sscanf(buf, "%fV", &Voltages[5]);
-		buf = strchr(buf, ':') + 1; sscanf(buf, "%fV", &Voltages[6]);
-		buf = strchr(buf, ':') + 1; sscanf(buf, "%fV", &Voltages[7]);
-		buf = strchr(buf, ':') + 1; sscanf(buf, "%fV", &Voltages[8]);
-		buf = strchr(buf, ':') + 1; sscanf(buf, "%f deg", &Temps[0]);
-		buf = strchr(buf, ':') + 1; sscanf(buf, "%f deg", &Temps[1]);
-		buf = strchr(buf, ':') + 1; sscanf(buf, "%f deg", &Temps[2]);
-	//	buf = strchr(buf, ':') + 1; sscanf(buf, "%f deg", &Temp4);
-		buf = strchr(buf, ':') + 1; sscanf(buf, "%f rpm", &Fans[0]);
-		buf = strchr(buf, ':') + 1; sscanf(buf, "%f rpm", &Fans[1]);
-		buf = strchr(buf, ':') + 1; sscanf(buf, "%f rpm", &Fans[2]);
+
+	if (fSensorDevice->InitCheck() != B_OK) {
+		printf("fSensorDevice->InitCheck() failed.\n");
+		fSensorDevice->Unset();
+		return false;
 	}
 
+	bytesRead = fSensorDevice->Read(buf, 512);
+	if (bytesRead < B_OK) {
+		printf("Read returned %s\n", strerror(bytesRead));
+		fSensorDevice->Unset();
+		return false;
+	}
+
+//	printf("read %d bytes\n", bytesRead);
+
+	buf = strchr(buf, ':') + 1; sscanf(buf, "%f V", &Voltages[0]);
+	buf = strchr(buf, ':') + 1; sscanf(buf, "%f V", &Voltages[1]);
+	buf = strchr(buf, ':') + 1; sscanf(buf, "%f V", &Voltages[2]);
+	buf = strchr(buf, ':') + 1; sscanf(buf, "%f V", &Voltages[3]);
+	buf = strchr(buf, ':') + 1; sscanf(buf, "%f V", &Voltages[4]);
+	buf = strchr(buf, ':') + 1; sscanf(buf, "%f V", &Voltages[5]);
+	buf = strchr(buf, ':') + 1; sscanf(buf, "%f V", &Voltages[6]);
+	buf = strchr(buf, ':') + 1; sscanf(buf, "%f V", &Voltages[7]);
+	buf = strchr(buf, ':') + 1; sscanf(buf, "%f V", &Voltages[8]);
+	buf = strchr(buf, ':') + 1; sscanf(buf, "%f °C", &Temps[0]);
+	buf = strchr(buf, ':') + 1; sscanf(buf, "%f °C", &Temps[1]);
+	buf = strchr(buf, ':') + 1; sscanf(buf, "%f °C", &Temps[2]);
+	buf = strchr(buf, ':') + 1; sscanf(buf, "%f RPM", &Fans[0]);
+	buf = strchr(buf, ':') + 1; sscanf(buf, "%f RPM", &Fans[1]);
+	buf = strchr(buf, ':') + 1; sscanf(buf, "%f RPM", &Fans[2]);
+
 	fSensorDevice->Unset();
+
 	return true;
 }
